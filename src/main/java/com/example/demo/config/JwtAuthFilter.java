@@ -2,8 +2,10 @@ package com.example.demo.config;
 
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -19,7 +21,7 @@ import java.io.IOException;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserService userService;
+    private final ApplicationContext applicationContext;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -32,9 +34,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String token = authHeader.substring(7);
             if (jwtTokenProvider.validateToken(token)) {
                 String username = jwtTokenProvider.getUsername(token);
-                var userDetails = userService.loadUserByUsername(username);
 
-                var authToken = new UsernamePasswordAuthenticationToken(
+                // Получаем UserService из ApplicationContext
+                UserService userService = applicationContext.getBean(UserService.class);
+                UserDetails userDetails = userService.loadUserByUsername(username);
+
+                UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -44,3 +50,4 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+

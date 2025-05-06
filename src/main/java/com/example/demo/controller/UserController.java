@@ -1,26 +1,28 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.UserRegistrationDto;
+import com.example.demo.model.User;
 import com.example.demo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/register")
+@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @GetMapping
-    public String showRegistrationForm() {
-        return "register";
-    }
+    @PostMapping("/api/users/register")
+    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto registrationDto) {
+        User user = new User();
+        user.setUsername(registrationDto.getUsername());
+        user.setEmail(registrationDto.getEmail());
+        user.setPassword(registrationDto.getPassword());
 
-    @PostMapping
-    public String registerUserAccount(@ModelAttribute UserRegistrationDto registrationDto) {
-        userService.save(registrationDto);
-        return "redirect:/register?success";
+        userService.save(user);
+
+        return ResponseEntity.ok("User registered successfully");
     }
 }

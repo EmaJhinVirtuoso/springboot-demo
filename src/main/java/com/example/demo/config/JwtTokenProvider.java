@@ -10,15 +10,17 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private final long expirationTime = 1000 * 60 * 15; // 15 минут
+    private final String jwtSecret = "VerySecretKeyThatIsAtLeast32CharsLongForHmac";
+    private final long jwtExpirationMs = 86400000; // 24 hours
+
+    private final Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
 
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(key)
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
 
@@ -32,9 +34,7 @@ public class JwtTokenProvider {
     }
 
     public String getUsername(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
+        return Jwts.parserBuilder().setSigningKey(key).build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
