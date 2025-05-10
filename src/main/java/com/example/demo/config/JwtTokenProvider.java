@@ -10,10 +10,11 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    private final String jwtSecret = "VerySecretKeyThatIsAtLeast32CharsLongForHmac";
+    private final String jwtSecret = "uG$92msl@F!3aV6QzP1oXe9bWrT7nYkL%p$#4JvB!ZqM@8TfLcK*2Hv^9Dn#6RsE";
     private final long jwtExpirationMs = 86400000; // 24 hours
 
     private final Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+
 
     public String generateToken(String username) {
         return Jwts.builder()

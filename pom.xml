@@ -71,7 +71,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Devtools -->
+        <!-- tools -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -79,7 +79,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Test dependencies -->
+        <!-- test dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -97,7 +97,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.18.30</version> <!-- Укажи версию lombok -->
+                            <version>1.18.30</version> 
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

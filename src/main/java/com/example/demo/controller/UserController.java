@@ -14,15 +14,4 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/api/users/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto registrationDto) {
-        User user = new User();
-        user.setUsername(registrationDto.getUsername());
-        user.setEmail(registrationDto.getEmail());
-        user.setPassword(registrationDto.getPassword());
-
-        userService.save(user);
-
-        return ResponseEntity.ok("User registered successfully");
-    }
 }
